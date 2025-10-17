@@ -1,4 +1,27 @@
+# Dependencies
 node_modules/
+
+# Next.js
 .next/
 out/
 .vercel/
+
+# Personal customizations (not to be committed)
+# Use convention: *.personal.md files are personal customizations
+skills/**/*.personal.md
+commands/**/*.personal.md
+agents/**/*.personal.md
+output-styles/**/*.personal.md
+
+# Personal directories (for individual customizations)
+skills/**/personal/
+commands/**/personal/
+agents/**/personal/
+output-styles/**/personal/
+
+# Local development
+*.log
+.DS_Store
+*.swp
+*.swo
+*~
