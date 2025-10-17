@@ -7,9 +7,12 @@ import type { Skill } from '@/lib/types';
 export default function LocalSkillsSection() {
   const [localSkills, setLocalSkills] = useState<Skill[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isDeployed, setIsDeployed] = useState(false);
 
   useEffect(() => {
     fetchLocalSkills();
+    // Check if we're in a deployed environment
+    setIsDeployed(typeof window !== 'undefined' && window.location.hostname !== 'localhost');
   }, []);
 
   const fetchLocalSkills = async () => {
@@ -44,13 +47,25 @@ export default function LocalSkillsSection() {
           </p>
         </div>
       ) : localSkills.length === 0 ? (
-        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
-          <p className="text-yellow-800 dark:text-yellow-300">
-            No skills found in your local directory. Check your{' '}
-            <Link href="/settings" className="underline">
-              settings
-            </Link>{' '}
-            to configure the correct path.
+        <div className={`rounded-lg p-6 ${
+          isDeployed
+            ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800'
+            : 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800'
+        }`}>
+          <p className={isDeployed ? 'text-blue-800 dark:text-blue-300' : 'text-yellow-800 dark:text-yellow-300'}>
+            {isDeployed ? (
+              <>
+                💡 <strong>Run locally to manage your installed skills.</strong> This online version is a preview library to browse available customizations. Download and run the app locally to sync, install, and manage your Claude Code skills.
+              </>
+            ) : (
+              <>
+                No skills found in your local directory. Check your{' '}
+                <Link href="/settings" className="underline">
+                  settings
+                </Link>{' '}
+                to configure the correct path.
+              </>
+            )}
           </p>
         </div>
       ) : (

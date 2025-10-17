@@ -7,9 +7,11 @@ import type { Command } from '@/lib/types';
 export default function LocalCommandsSection() {
   const [localCommands, setLocalCommands] = useState<Command[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isDeployed, setIsDeployed] = useState(false);
 
   useEffect(() => {
     fetchLocalCommands();
+    setIsDeployed(typeof window !== 'undefined' && window.location.hostname !== 'localhost');
   }, []);
 
   const fetchLocalCommands = async () => {
@@ -44,13 +46,25 @@ export default function LocalCommandsSection() {
           </p>
         </div>
       ) : localCommands.length === 0 ? (
-        <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
-          <p className="text-yellow-800 dark:text-yellow-300">
-            No commands found in your local directory. Check your{' '}
-            <Link href="/settings" className="underline">
-              settings
-            </Link>{' '}
-            to configure the correct path.
+        <div className={`rounded-lg p-6 ${
+          isDeployed
+            ? 'bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800'
+            : 'bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800'
+        }`}>
+          <p className={isDeployed ? 'text-blue-800 dark:text-blue-300' : 'text-yellow-800 dark:text-yellow-300'}>
+            {isDeployed ? (
+              <>
+                💡 <strong>Run locally to manage your installed commands.</strong> This online version is a preview library. Download and run locally to install and use these slash commands in Claude Code.
+              </>
+            ) : (
+              <>
+                No commands found in your local directory. Check your{' '}
+                <Link href="/settings" className="underline">
+                  settings
+                </Link>{' '}
+                to configure the correct path.
+              </>
+            )}
           </p>
         </div>
       ) : (
