@@ -346,17 +346,261 @@ cp commands/base-command.md commands/my-command.personal.md
 
 ## Contributing
 
-### To the Base Repository
-1. Add customizations to appropriate directory (`skills/`, `commands/`, `agents/`, `output-styles/`)
-2. Follow the frontmatter format for each type
-3. Test locally with `npm run dev`
-4. Submit pull request
+This project supports contributions at multiple levels: from individual employees to organizations to the base repository.
 
-### To Your Organization Repository
-1. Use organization prefix for templates (e.g., `321-*`)
-2. Document organization-specific conventions
-3. Review and merge from base repository regularly
-4. Share with team members via git
+### Contributing to the Base Repository (Upstream)
+
+Anyone can contribute improvements, bug fixes, or new generic templates to the base repository:
+
+#### From an Organization Fork
+
+```bash
+# In your organization repo (e.g., 321-company/agent-helpers)
+
+# 1. Create a clean branch from the base repository
+git fetch base
+git checkout -b contribute/my-feature base/master
+
+# 2. Add or modify the customization
+# For a new generic skill (remove org-specific prefixes and code):
+cp skills/321-api-caller skills/api-helper
+vim skills/api-helper/SKILL.md
+# Remove all 321-specific references, make it generic
+
+# 3. Commit with clear message
+git add skills/api-helper
+git commit -m "feat: add generic API helper skill
+
+This skill provides utilities for calling and testing APIs:
+- Request formatting
+- Response parsing
+- Error handling
+
+Originally developed at 321, generalized for community use."
+
+# 4. Push to your organization fork
+git push origin contribute/my-feature
+
+# 5. Create Pull Request to base repository
+gh pr create --repo AlexisLaporte/agent-helpers \
+  --title "feat: add generic API helper skill" \
+  --body "Contribution from 321. This skill was developed internally and generalized for the community.
+
+Features:
+- REST API interaction
+- JSON parsing
+- Error handling
+
+All 321-specific code has been removed."
+```
+
+#### From an Individual Fork
+
+```bash
+# In your personal fork (e.g., john-321/agent-helpers)
+
+# 1. Fix a bug or improve a base template
+git fetch base
+git checkout -b fix/conversation-finder-bug base/master
+
+# 2. Make your changes
+vim skills/conversation-finder/SKILL.md
+
+# 3. Commit
+git commit -m "fix: correct date parsing in conversation-finder"
+
+# 4. Push to your fork
+git push origin fix/conversation-finder-bug
+
+# 5. Create PR to base repository
+gh pr create --repo AlexisLaporte/agent-helpers \
+  --title "fix: correct date parsing in conversation-finder" \
+  --body "Fixed a bug where dates in YYYY-MM-DD format were not parsed correctly."
+```
+
+### Contributing to Your Organization Repository
+
+Team members can propose new organization-specific templates or improvements:
+
+```bash
+# In your personal fork
+
+# 1. Create a feature branch
+git checkout -b feat/add-deployment-helper
+
+# 2. Add an organization-prefixed customization
+mkdir -p skills/321-deployment-helper
+echo "---
+name: 321 Deployment Helper
+description: Automates deployment to 321 infrastructure
+---
+
+# 321 Deployment Helper
+..." > skills/321-deployment-helper/SKILL.md
+
+# 3. Commit and push
+git add skills/321-deployment-helper
+git commit -m "feat: add 321 deployment automation skill"
+git push origin feat/add-deployment-helper
+
+# 4. Create PR to organization repository
+gh pr create --repo 321-company/agent-helpers \
+  --title "feat: add 321 deployment automation skill" \
+  --body "New skill to automate deployment to our infrastructure.
+
+Features:
+- Validates deployment config
+- Runs pre-deployment checks
+- Automates kubectl commands"
+```
+
+### Contribution Guidelines
+
+#### For Base Repository Contributions
+
+**Must be generic and reusable:**
+- ✅ Generic API helper that works with any REST API
+- ✅ Code review assistant for any language
+- ❌ Deployment script specific to one company's infrastructure
+- ❌ Tool that requires proprietary APIs
+
+**Must be well-documented:**
+- Clear description of what it does
+- Usage examples
+- Any prerequisites or dependencies
+
+**Must be tested:**
+- Test the customization locally
+- Verify it works in a clean environment
+
+#### For Organization Repository Contributions
+
+**Can be organization-specific:**
+- ✅ Tools for your internal infrastructure
+- ✅ Integration with company-specific APIs
+- ✅ Custom workflows for your team
+
+**Must use organization prefix:**
+- Use `321-` prefix for 321 company templates
+- Use your organization's short name/code
+
+**Document internal dependencies:**
+- Specify what internal tools/APIs are required
+- Include setup instructions for new team members
+
+### Pull Request Template
+
+When contributing to the **base repository**, your PR should answer:
+
+```markdown
+## Type of Contribution
+- [ ] New customization (skill/command/agent/output-style)
+- [ ] Bug fix
+- [ ] Enhancement to existing customization
+- [ ] Documentation improvement
+- [ ] Other (please describe)
+
+## For New Customizations
+- [ ] This is generic and reusable (not company-specific)
+- [ ] All proprietary/internal references have been removed
+- [ ] Documentation is clear and includes examples
+- [ ] I have tested this locally
+
+## Description
+<!-- Describe what this PR does and why -->
+
+## Testing
+<!-- How did you test this? -->
+
+## Additional Context
+<!-- Any other relevant information -->
+```
+
+### Review Process
+
+**Base Repository (upstream):**
+1. Maintainer reviews for generic applicability
+2. Checks for code quality and documentation
+3. Tests functionality
+4. Merges if approved
+5. Tags release if significant
+
+**Organization Repository:**
+1. Team lead or designated reviewer checks
+2. Verifies it follows organization standards
+3. Tests in company environment
+4. Merges if approved
+
+### Syncing After Merge
+
+**After your PR is merged to base:**
+
+```bash
+# Organizations should pull in the update
+cd 321-company/agent-helpers
+git fetch base
+git merge base/master
+git push origin master
+
+# Employees can then pull from organization
+cd john-321/agent-helpers
+git fetch upstream
+git merge upstream/master
+git push origin master
+```
+
+### Common Contribution Scenarios
+
+#### Scenario 1: Employee Improves Base Template
+
+```bash
+# John finds a bug in conversation-finder
+git fetch base
+git checkout -b fix/conv-finder-bug base/master
+# Fix the bug
+git commit -m "fix: handle empty conversation lists"
+# PR to AlexisLaporte/agent-helpers
+```
+
+#### Scenario 2: 321 Shares Generic Tool
+
+```bash
+# 321 developed a useful generic tool
+git checkout -b contribute/json-formatter base/master
+# Copy and generalize their 321-json-formatter
+mv skills/321-json-formatter skills/json-formatter
+# Remove 321-specific code
+git commit -m "feat: add JSON formatting skill"
+# PR to AlexisLaporte/agent-helpers
+```
+
+#### Scenario 3: Employee Adds Company Tool
+
+```bash
+# John creates a tool for 321's infrastructure
+git checkout -b feat/321-k8s-helper
+mkdir -p skills/321-k8s-helper
+# Create the skill
+git commit -m "feat: add 321 Kubernetes helper"
+# PR to 321-company/agent-helpers
+```
+
+### Getting Your Contributions Merged
+
+**Tips for successful PRs:**
+
+1. **Start with an issue:** Open an issue first to discuss major changes
+2. **Keep it focused:** One feature/fix per PR
+3. **Write good commit messages:** Explain the "why", not just the "what"
+4. **Test thoroughly:** Include testing details in PR description
+5. **Document well:** Update README if adding new features
+6. **Be responsive:** Address review comments promptly
+
+### Questions?
+
+- **Base repository issues**: https://github.com/AlexisLaporte/agent-helpers/issues
+- **Organization-specific questions**: Contact your team lead
+- **General discussion**: Start a GitHub Discussion
 
 ## License
 
