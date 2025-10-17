@@ -18,9 +18,28 @@ A web application to browse, manage, and sync Claude Code skills.
 - 🔄 Git pull updates
 - 🚀 MCP server for remote skill management
 
+## Tech Stack
+
+- **Framework**: Next.js 15 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Runtime**: Node.js
+- **Deployment**: Vercel (planned)
+
 ## Quick Start
 
-### Development
+### Simple Start
+
+```bash
+./start.sh
+```
+
+Or with npm:
+```bash
+npm start
+```
+
+### Manual Start
 
 ```bash
 cd /data/dev/agent-helpers/app
@@ -100,13 +119,6 @@ cp -r skills/my-skill ~/.claude/skills/
 ```
 
 Automated sync coming in future releases.
-
-## Tech Stack
-
-- **Framework**: Next.js 15 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Deployment**: Vercel (planned)
 
 ## Development
 
