@@ -42,6 +42,7 @@ async function readSkill(skillPath: string, isLocal = false): Promise<Skill | nu
       description: metadata.description,
       path: skillPath,
       content,
+      type: 'skill',
       isLocal,
       isArchived: false,
     };
