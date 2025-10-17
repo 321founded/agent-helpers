@@ -4,7 +4,7 @@ node_modules/
 # Next.js
 .next/
 out/
-.vercel/
+# .vercel/ - commented out, needed for GitHub Actions deployment
 
 # Personal customizations (not to be committed)
 # Use convention: *.personal.md files are personal customizations
